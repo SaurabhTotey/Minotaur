@@ -7,7 +7,8 @@ pub enum Tile {
 	INVISIBLE_EXIT, // an exit that hasn't been revealed
 	VISIBLE_EXIT, // an exit that both players can see
 	HERO, // the hero player
-	MINOTAUR // the minotaur player
+	MINOTAUR, // the minotaur player
+	UNKNOWN // tile is unknown
 }
 impl Tile {
 
@@ -23,7 +24,8 @@ impl Tile {
 			Tile::INVISIBLE_EXIT => ' ',
 			Tile::VISIBLE_EXIT => 'E',
 			Tile::HERO => 'H',
-			Tile::MINOTAUR => 'M'
+			Tile::MINOTAUR => 'M',
+			Tile::UNKNOWN => '█'
 		}
 	}
 
