@@ -5,8 +5,8 @@ extern crate rand;
 use rand::{Rng, thread_rng};
 use rand::seq::SliceRandom;
 
-const WIDTH: usize = 100;
-const HEIGHT: usize = 20;
+const WIDTH: usize = 30;
+const HEIGHT: usize = 15;
 
 pub struct Labyrinth {
 	tiles: [[Tile; WIDTH]; HEIGHT],
@@ -27,14 +27,20 @@ impl Labyrinth {
 			let branchCandidate = branchCandidates.remove(branchCandidateIndex);
 			tiles[branchCandidate.0][branchCandidate.1] = Tile::WALKABLE;
 
-			let mut locationCandidates = [(1 as isize, 0), (0, 1), (-1, 0), (0, -1)].iter().map(|movementDirection|
+			let movementDirections = [(1 as isize, 0), (0, 1), (-1, 0), (0, -1)];
+			let mut locationCandidates = movementDirections.iter().map(|movementDirection|
 				(branchCandidate.0 as isize + movementDirection.0, branchCandidate.1 as isize + movementDirection.1)
 			).filter(|location|
 				location.0 > 0 && location.1 > 0 && location.0 < HEIGHT as isize - 1 && location.1 < WIDTH as isize - 1
+					&& tiles[location.0 as usize][location.1 as usize] == Tile::WALL
+					&& movementDirections.iter().map(|innerMovementDirection|
+						(location.0 + innerMovementDirection.0, location.1 + innerMovementDirection.1)
+					).filter(|innerLocation|
+						innerLocation.0 >= 0 && innerLocation.1 >= 0 && innerLocation.0 < HEIGHT as isize && innerLocation.1 < WIDTH as isize
+							&& tiles[innerLocation.0 as usize][innerLocation.1 as usize] == Tile::WALL
+					).count() >= 3
 			).map(|location|
 				(location.0 as usize, location.1 as usize)
-			).filter(|location|
-				tiles[location.0][location.1] == Tile::WALL //TODO: also need to check that 3 of the 4 neighbors of location are walls
 			).collect::<Vec<_>>();
 
 			if locationCandidates.is_empty() {

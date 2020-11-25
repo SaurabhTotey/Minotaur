@@ -17,15 +17,15 @@ impl Tile {
 	 */
 	pub fn representation(&self) -> char {
 		match *self {
-			Tile::WALKABLE => ' ',
+			Tile::WALKABLE => '░',
 			Tile::TORCH => 'T',
 			Tile::VISIBLE_NON_EXIT => 'N',
-			Tile::WALL => '@',
-			Tile::INVISIBLE_EXIT => ' ',
+			Tile::WALL => '█',
+			Tile::INVISIBLE_EXIT => '░',
 			Tile::VISIBLE_EXIT => 'E',
 			Tile::HERO => 'H',
 			Tile::MINOTAUR => 'M',
-			Tile::UNKNOWN => '█'
+			Tile::UNKNOWN => '@'
 		}
 	}
 
