@@ -56,6 +56,8 @@ impl Labyrinth {
 			}
 		}
 
+		//TODO: place hero, minotaur, and exit on walkable tiles
+
 		return Labyrinth { tiles };
 	}
 
