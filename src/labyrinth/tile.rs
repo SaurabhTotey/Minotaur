@@ -1,4 +1,4 @@
-
+#[derive(Copy, Clone)]
 pub enum Tile {
 	WALKABLE, // can be walked on
 	TORCH, // can be walked on and reveals the surrounding area
@@ -9,12 +9,12 @@ pub enum Tile {
 	HERO, // the hero player
 	MINOTAUR // the minotaur player
 }
-
-/**
- * Associates each tile with an ASCII character to visually represent it
- */
 impl Tile {
-	fn value(&self) -> char {
+
+	/**
+	 * Associates each tile with an ASCII character to visually represent it
+	 */
+	fn representation(&self) -> char {
 		match *self {
 			Tile::WALKABLE => ' ',
 			Tile::TORCH => 'T',
@@ -26,4 +26,5 @@ impl Tile {
 			Tile::MINOTAUR => 'M'
 		}
 	}
+
 }
