@@ -4,5 +4,5 @@ mod labyrinth;
 
 fn main() {
 	let labyrinth = labyrinth::Labyrinth::new();
-    println!("Hello, world!");
+	println!("{}", labyrinth);
 }

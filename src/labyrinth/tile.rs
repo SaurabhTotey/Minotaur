@@ -14,7 +14,7 @@ impl Tile {
 	/**
 	 * Associates each tile with an ASCII character to visually represent it
 	 */
-	fn representation(&self) -> char {
+	pub fn representation(&self) -> char {
 		match *self {
 			Tile::WALKABLE => ' ',
 			Tile::TORCH => 'T',
