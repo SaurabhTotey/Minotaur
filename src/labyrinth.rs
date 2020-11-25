@@ -26,12 +26,28 @@ impl Labyrinth {
 			let branchCandidateIndex = rng.gen_range(0, branchCandidates.len());
 			let branchCandidate = branchCandidates.remove(branchCandidateIndex);
 			tiles[branchCandidate.0][branchCandidate.1] = Tile::WALKABLE;
-			let mut locationCandidates = [(1 as isize, 0), (0, 1), (-1, 0), (0, -1)].iter().map(|movementDirection| {
+
+			let mut locationCandidates = [(1 as isize, 0), (0, 1), (-1, 0), (0, -1)].iter().map(|movementDirection|
 				(branchCandidate.0 as isize + movementDirection.0, branchCandidate.1 as isize + movementDirection.1)
-			}).filter(|location| {
+			).filter(|location|
 				location.0 > 0 && location.1 > 0 && location.0 < HEIGHT as isize - 1 && location.1 < WIDTH as isize - 1
-			}).collect::<Vec<_>>();
-			locationCandidates.shuffle(&mut rng);
+			).map(|location|
+				(location.0 as usize, location.1 as usize)
+			).filter(|location|
+				tiles[location.0][location.1] == Tile::WALL //TODO: also need to check that 3 of the 4 neighbors of location are walls
+			).collect::<Vec<_>>();
+
+			if locationCandidates.is_empty() {
+				continue;
+			}
+
+			let location: (usize, usize) = *locationCandidates.choose(&mut rng).unwrap();
+			tiles[location.0][location.1] = Tile::WALKABLE;
+			branchCandidates.push(location);
+
+			if locationCandidates.len() > 1 {
+				branchCandidates.push(branchCandidate);
+			}
 		}
 
 		return Labyrinth { tiles };

@@ -1,4 +1,4 @@
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub enum Tile {
 	WALKABLE, // can be walked on
 	TORCH, // can be walked on and reveals the surrounding area
