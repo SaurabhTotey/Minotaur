@@ -15,4 +15,12 @@ impl NetworkManager for MinotaurManager {
 		return MinotaurManager { tcpListener: listener, heroStream: stream };
 	}
 
+	fn handleInput(&self, input: String) -> bool {
+		unimplemented!()
+	}
+
+	fn handleResponse(&self, response: String) -> bool {
+		unimplemented!()
+	}
+
 }
