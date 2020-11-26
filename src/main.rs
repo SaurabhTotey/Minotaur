@@ -1,8 +1,8 @@
 #![allow(nonstandard_style)]
 
-use crate::network::NetworkManager;
-
 mod network;
+mod labyrinth;
+use crate::network::NetworkManager;
 
 fn main() {
 	let args: Vec<String> = std::env::args().collect();

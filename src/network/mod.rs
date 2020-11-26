@@ -3,11 +3,13 @@ use std::io::Read;
 
 pub mod HeroManager;
 pub mod MinotaurManager;
+pub mod Action;
 
 const PORT: i32 = 6669;
 
 /**
  * Blocks and gets input from stdin
+ * TODO: interpret and make this return an Action
  */
 fn getUserInput() -> String {
 	let mut buffer = String::new();
@@ -36,7 +38,7 @@ pub trait NetworkManager {
 	 * Should handle an input from the user
 	 * Should return whether the program is done
 	 */
-	fn handleInput(&self, input: String) -> bool;
+	fn handleInput(&self, input: Action::Action) -> bool;
 
 	/**
 	 * Should handle a response from the other player over the network
