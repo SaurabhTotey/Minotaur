@@ -6,14 +6,13 @@ pub struct MinotaurManager {
 	heroStream: TcpStream
 }
 impl MinotaurManager {
+}
+impl NetworkManager for MinotaurManager {
 
-	pub fn new() -> MinotaurManager {
+	fn new() -> MinotaurManager {
 		let listener = TcpListener::bind("0.0.0.0:".to_string() + &*PORT.to_string()).unwrap();
 		let stream = listener.accept().unwrap().0;
 		return MinotaurManager { tcpListener: listener, heroStream: stream };
 	}
-
-}
-impl NetworkManager for MinotaurManager {
 
 }
