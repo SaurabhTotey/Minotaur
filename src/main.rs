@@ -3,6 +3,7 @@
 use std::net::{TcpStream, TcpListener};
 
 mod labyrinth;
+mod network;
 
 const PORT: i32 = 6669;
 
