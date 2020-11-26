@@ -9,7 +9,7 @@ impl HeroManager {
 impl NetworkManager for HeroManager {
 
 	fn new() -> HeroManager {
-		return HeroManager{ minotaurStream: TcpStream::connect("127.0.0.1:".to_string() + &*PORT.to_string()).unwrap() };
+		return HeroManager { minotaurStream: TcpStream::connect("127.0.0.1:".to_string() + &*PORT.to_string()).unwrap() };
 	}
 
 }
