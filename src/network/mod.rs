@@ -23,7 +23,11 @@ fn getUserInput() -> String {
  */
 fn getNetworkResponse(stream: &mut TcpStream) -> String {
 	let mut buffer = String::new();
-	stream.read_to_string(&mut buffer).unwrap();
+	while buffer.chars().last().unwrap_or(' ') != '\n' {
+		let mut charBuffer: [u8; 1] = [0];
+		stream.read(&mut charBuffer);
+		buffer.push(charBuffer[0] as char)
+	}
 	return buffer;
 }
 
