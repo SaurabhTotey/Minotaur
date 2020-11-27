@@ -24,27 +24,16 @@ impl Labyrinth {
 		let mut tiles = [[Tile::WALL; WIDTH]; HEIGHT];
 
 		let mut branchCandidates: Vec<(usize, usize)> = Vec::new();
-		branchCandidates.push((rng.gen_range(1, HEIGHT), rng.gen_range(1, WIDTH)));
+		branchCandidates.push((rng.gen_range(1, HEIGHT - 1), rng.gen_range(1, WIDTH - 1)));
 		while !branchCandidates.is_empty() {
-			let branchCandidateIndex = rng.gen_range(0, branchCandidates.len());
-			let branchCandidate = branchCandidates.remove(branchCandidateIndex);
+			let branchCandidate = branchCandidates.remove(rng.gen_range(0, branchCandidates.len()));
 			tiles[branchCandidate.0][branchCandidate.1] = Tile::WALKABLE;
 
-			let movementDirections = [(1 as isize, 0), (0, 1), (-1, 0), (0, -1)];
-			let mut locationCandidates = movementDirections.iter().map(|movementDirection|
-				(branchCandidate.0 as isize + movementDirection.0, branchCandidate.1 as isize + movementDirection.1)
-			).filter(|location|
-				location.0 > 0 && location.1 > 0 && location.0 < HEIGHT as isize - 1 && location.1 < WIDTH as isize - 1
-					&& tiles[location.0 as usize][location.1 as usize] == Tile::WALL
-					&& movementDirections.iter().map(|innerMovementDirection|
-						(location.0 + innerMovementDirection.0, location.1 + innerMovementDirection.1)
-					).filter(|innerLocation|
-						innerLocation.0 >= 0 && innerLocation.1 >= 0 && innerLocation.0 < HEIGHT as isize && innerLocation.1 < WIDTH as isize
-							&& tiles[innerLocation.0 as usize][innerLocation.1 as usize] == Tile::WALL
-					).count() >= 3
-			).map(|location|
-				(location.0 as usize, location.1 as usize)
-			).collect::<Vec<_>>();
+			let locationCandidates = Labyrinth::neighborsOf(branchCandidate).into_iter()
+				.filter(|location|
+					Labyrinth::isInsideLabyrinthBounds(*location) && tiles[location.0][location.1] == Tile::WALL
+						&& Labyrinth::neighborsOf(*location).into_iter().filter(|innerLocation| tiles[innerLocation.0][innerLocation.1] == Tile::WALL).count() >= 3
+				).collect::<Vec<_>>();
 
 			if locationCandidates.is_empty() {
 				continue;
@@ -70,11 +59,12 @@ impl Labyrinth {
 	 * Is similar to isInsideLabyrinthBounds, but this method also returns true for the edges
 	 */
 	fn isLegalCoordinate(location: (usize, usize)) -> bool {
-		return location.0 >= 0 && location.1 >= 0 && location.0 < HEIGHT && location.1 < WIDTH
+		return location.0 < HEIGHT && location.1 < WIDTH
 	}
 
 	/**
 	 * Returns the legal neighbor coordinates of a given location
+	 * Assumes that overflow and underflow won't be an issue
 	 */
 	fn neighborsOf(location: (usize, usize)) -> Vec<(usize, usize)> {
 		let movementDirections = [(1 as isize, 0), (0, 1), (-1, 0), (0, -1)];

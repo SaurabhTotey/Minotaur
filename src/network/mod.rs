@@ -13,7 +13,7 @@ const PORT: i32 = 6669;
  */
 fn getUserInput() -> String {
 	let mut buffer = String::new();
-	let mut stdin = std::io::stdin();
+	let stdin = std::io::stdin();
 	stdin.read_line(&mut buffer).unwrap();
 	return buffer;
 }
@@ -25,7 +25,7 @@ fn getNetworkResponse(stream: &mut TcpStream) -> String {
 	let mut message = String::new();
 	while message.chars().last().unwrap_or(' ') != '\n' {
 		let mut buffer: [u8; 1] = [0];
-		stream.read(&mut buffer);
+		stream.read(&mut buffer).unwrap();
 		message.push(buffer[0] as char)
 	}
 	return message;
