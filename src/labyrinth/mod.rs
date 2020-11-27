@@ -1,6 +1,6 @@
 mod tile;
 use tile::Tile;
-use std::fmt::{Display, Formatter, Result};
+use std::fmt::{Debug, Formatter, Result};
 extern crate rand;
 use rand::{Rng, thread_rng};
 use rand::seq::SliceRandom;
@@ -64,12 +64,37 @@ impl Labyrinth {
 		return Labyrinth { tiles, minotaurCoordinates: (0, 0), heroCoordinates: (0, 0), commonKnowledge: Vec::new() };
 	}
 
-	//TODO: consider utility methods for finding neighbors, legal coordinates, etc.
+	/**
+	 * Returns whether the given coordinates are legal
+	 * Legal coordinates are those that can access the tiles value of a Labyrinth struct
+	 * Is similar to isInsideLabyrinthBounds, but this method also returns true for the edges
+	 */
+	fn isLegalCoordinate(location: (usize, usize)) -> bool {
+		return location.0 >= 0 && location.1 >= 0 && location.0 < HEIGHT && location.1 < WIDTH
+	}
+
+	/**
+	 * Returns the legal neighbor coordinates of a given location
+	 */
+	fn neighborsOf(location: (usize, usize)) -> Vec<(usize, usize)> {
+		let movementDirections = [(1 as isize, 0), (0, 1), (-1, 0), (0, -1)];
+		return movementDirections.iter()
+			.map(|movementDirection| ((location.0 as isize + movementDirection.0) as usize, (location.1 as isize + movementDirection.1) as usize))
+			.filter(|neighbor| Labyrinth::isLegalCoordinate(*neighbor)).collect();
+	}
+
+	/**
+	 * Returns whether the given coordinates are within the labyrinth bounds
+	 * Notably excludes the very edges as those should always be WALLs
+	 */
+	fn isInsideLabyrinthBounds(location: (usize, usize)) -> bool {
+		return location.0 > 0 && location.1 > 0 && location.0 < (HEIGHT as isize - 1) as usize && location.1 < (WIDTH as isize - 1) as usize
+	}
 
 	//TODO: make methods to make a displayable labyrinth for the player and the minotaur
 
 }
-impl Display for Labyrinth {
+impl Debug for Labyrinth {
 	fn fmt(&self, f: &mut Formatter<'_>) -> Result {
 		write!(
 			f,

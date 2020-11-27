@@ -5,6 +5,7 @@ mod labyrinth;
 use crate::network::NetworkManager;
 
 fn main() {
+	println!("{:?}", labyrinth::Labyrinth::new());
 	let args: Vec<String> = std::env::args().collect();
 	if args.len() < 2 || !["minotaur".to_string(), "hero".to_string()].contains(&args[1]) {
 		panic!("Program must be run with argument of \"minotaur\" or \"hero\".")
