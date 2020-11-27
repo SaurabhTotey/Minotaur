@@ -18,18 +18,18 @@ impl NetworkManager for MinotaurManager {
 		return MinotaurManager { tcpListener: listener, heroStream: stream, labyrinth: Labyrinth::new() };
 	}
 
-	fn handleInput(&self, input: Action) -> bool {
+	fn handleInput(&mut self, input: Action) -> bool {
 		unimplemented!()
 	}
 
-	fn handleResponse(&self, response: String) -> bool {
+	fn handleResponse(&mut self, response: String) -> bool {
 		unimplemented!()
 	}
 
-	fn run() {
+	fn run(&mut self) {
 		let mut isGameFinished = false;
 		while !isGameFinished {
-			//TODO:
+
 		}
 	}
 

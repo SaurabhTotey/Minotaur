@@ -13,15 +13,15 @@ impl NetworkManager for HeroManager {
 		return HeroManager { minotaurStream: TcpStream::connect("127.0.0.1:".to_string() + &*PORT.to_string()).unwrap() };
 	}
 
-	fn handleInput(&self, input: Action) -> bool {
+	fn handleInput(&mut self, input: Action) -> bool {
 		unimplemented!()
 	}
 
-	fn handleResponse(&self, response: String) -> bool {
+	fn handleResponse(&mut self, response: String) -> bool {
 		unimplemented!()
 	}
 
-	fn run() {
+	fn run(&mut self) {
 		let mut isGameFinished = false;
 		while !isGameFinished {
 			//TODO:

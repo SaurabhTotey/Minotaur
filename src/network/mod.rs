@@ -38,17 +38,17 @@ pub trait NetworkManager {
 	 * Should handle an input from the user
 	 * Should return whether the program is done
 	 */
-	fn handleInput(&self, input: Action::Action) -> bool;
+	fn handleInput(&mut self, input: Action::Action) -> bool;
 
 	/**
 	 * Should handle a response from the other player over the network
 	 * Should return whether the program is done
 	 */
-	fn handleResponse(&self, response: String) -> bool;
+	fn handleResponse(&mut self, response: String) -> bool;
 
 	/**
 	 * Should actually run the game to completion
 	 */
-	fn run();
+	fn run(&mut self);
 
 }
