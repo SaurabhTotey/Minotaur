@@ -22,13 +22,13 @@ fn getUserInput() -> String {
  * Blocks and gets a response from the given TcpStream
  */
 fn getNetworkResponse(stream: &mut TcpStream) -> String {
-	let mut buffer = String::new();
-	while buffer.chars().last().unwrap_or(' ') != '\n' {
-		let mut charBuffer: [u8; 1] = [0];
-		stream.read(&mut charBuffer);
-		buffer.push(charBuffer[0] as char)
+	let mut message = String::new();
+	while message.chars().last().unwrap_or(' ') != '\n' {
+		let mut buffer: [u8; 1] = [0];
+		stream.read(&mut buffer);
+		message.push(buffer[0] as char)
 	}
-	return buffer;
+	return message;
 }
 
 pub trait NetworkManager {
