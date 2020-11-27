@@ -10,9 +10,10 @@ fn main() {
 		panic!("Program must be run with argument of \"minotaur\" or \"hero\".")
 	}
 	let manager: Box<dyn NetworkManager> = if args[1] == "minotaur" {
-		 Box::new(network::MinotaurManager::MinotaurManager::new())
+		Box::new(network::MinotaurManager::MinotaurManager::new())
 	}
 	else {
 		Box::new(network::HeroManager::HeroManager::new())
 	};
+	manager.run();
 }

@@ -46,4 +46,9 @@ pub trait NetworkManager {
 	 */
 	fn handleResponse(&self, response: String) -> bool;
 
+	/**
+	 * Should actually run the game to completion
+	 */
+	fn run();
+
 }

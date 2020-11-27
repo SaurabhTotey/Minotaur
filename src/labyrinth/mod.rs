@@ -9,7 +9,10 @@ const WIDTH: usize = 30;
 const HEIGHT: usize = 15;
 
 pub struct Labyrinth {
-	tiles: [[Tile; WIDTH]; HEIGHT],
+	tiles: [[Tile; WIDTH]; HEIGHT], // all the tiles in the labyrinth
+	minotaurCoordinates: (usize, usize),
+	heroCoordinates: (usize, usize),
+	commonKnowledge: Vec<(usize, usize)> // what tiles are visible to both players
 }
 impl Labyrinth {
 
@@ -58,8 +61,12 @@ impl Labyrinth {
 
 		//TODO: place hero, minotaur, and exit on walkable tiles
 
-		return Labyrinth { tiles };
+		return Labyrinth { tiles, minotaurCoordinates: (0, 0), heroCoordinates: (0, 0), commonKnowledge: Vec::new() };
 	}
+
+	//TODO: consider utility methods for finding neighbors, legal coordinates, etc.
+
+	//TODO: make methods to make a displayable labyrinth for the player and the minotaur
 
 }
 impl Display for Labyrinth {

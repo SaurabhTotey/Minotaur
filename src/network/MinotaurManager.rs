@@ -26,4 +26,11 @@ impl NetworkManager for MinotaurManager {
 		unimplemented!()
 	}
 
+	fn run() {
+		let mut isGameFinished = false;
+		while !isGameFinished {
+			//TODO:
+		}
+	}
+
 }

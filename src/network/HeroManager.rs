@@ -21,4 +21,11 @@ impl NetworkManager for HeroManager {
 		unimplemented!()
 	}
 
+	fn run() {
+		let mut isGameFinished = false;
+		while !isGameFinished {
+			//TODO:
+		}
+	}
+
 }
