@@ -54,6 +54,7 @@ impl Labyrinth {
 			}
 		}
 
+		//TODO: make this section retry upon too many attempts in case there is an impossible-to-solve situation
 		let exitLocation = *walkableTiles.choose(&mut rng).unwrap();
 		tiles[exitLocation.0][exitLocation.1] = Tile::INVISIBLE_EXIT;
 
@@ -117,7 +118,26 @@ impl Labyrinth {
 		if location0 == location1 {
 			return 0;
 		}
-		return MINIMUM_DISTANCE_BETWEEN_STARTING_POSITIONS + 1; //TODO: implement
+
+		let mut minDistances = [[-1; WIDTH]; HEIGHT];
+		let mut currentLocations = vec![location0];
+		minDistances[location0.0][location1.1] = 0;
+
+		while minDistances[location1.0][location1.1] == -1 {
+			let mut newLocations: Vec<(usize, usize)> = Vec::new();
+			currentLocations.iter().for_each(|location| {
+				let currentLocationValue = minDistances[location.0][location.1];
+				Labyrinth::walkableNeighborsOf(tiles, *location).into_iter()
+					.filter(move |neighbor| minDistances[neighbor.0][neighbor.1] == -1)
+					.for_each(|neighbor| {
+						minDistances[neighbor.0][neighbor.1] = 1 + currentLocationValue;
+						newLocations.push(neighbor);
+					});
+			});
+			currentLocations = newLocations;
+		}
+
+		return minDistances[location1.0][location1.1];
 	}
 
 	//TODO: make methods to make a displayable labyrinth for the player and the minotaur
