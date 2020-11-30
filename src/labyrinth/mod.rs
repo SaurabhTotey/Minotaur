@@ -54,20 +54,20 @@ impl Labyrinth {
 			}
 		}
 
-		//TODO: make this section retry upon too many attempts in case there is an impossible-to-solve situation
-		let exitLocation = *walkableTiles.choose(&mut rng).unwrap();
-		tiles[exitLocation.0][exitLocation.1] = Tile::INVISIBLE_EXIT;
-
-		let mut minotaurLocation = exitLocation;
-		while Labyrinth::distanceBetweeen(tiles, exitLocation, minotaurLocation) <= MINIMUM_DISTANCE_BETWEEN_STARTING_POSITIONS {
+		// TODO: may need to regenerate tiles if this is attempted too many times
+		// perhaps its possible that tiles has generated in such a way that we can never choose
+		// these locations
+		let mut exitLocation: (usize, usize) = (0, 0);
+		let mut minotaurLocation: (usize, usize) = (0, 0);
+		let mut heroLocation: (usize, usize) = (0, 0);
+		while min(min(Labyrinth::distanceBetweeen(tiles, exitLocation, minotaurLocation), Labyrinth::distanceBetweeen(tiles, exitLocation, heroLocation)), Labyrinth::distanceBetweeen(tiles, minotaurLocation, heroLocation)) < MINIMUM_DISTANCE_BETWEEN_STARTING_POSITIONS {
+			exitLocation = *walkableTiles.choose(&mut rng).unwrap();
 			minotaurLocation = *walkableTiles.choose(&mut rng).unwrap();
-		}
-		tiles[minotaurLocation.0][minotaurLocation.1] = Tile::MINOTAUR;
-
-		let mut heroLocation = exitLocation;
-		while min(Labyrinth::distanceBetweeen(tiles, exitLocation, heroLocation), Labyrinth::distanceBetweeen(tiles, minotaurLocation, heroLocation)) <= MINIMUM_DISTANCE_BETWEEN_STARTING_POSITIONS {
 			heroLocation = *walkableTiles.choose(&mut rng).unwrap();
 		}
+
+		tiles[exitLocation.0][exitLocation.1] = Tile::INVISIBLE_EXIT;
+		tiles[minotaurLocation.0][minotaurLocation.1] = Tile::MINOTAUR;
 		tiles[heroLocation.0][heroLocation.1] = Tile::HERO;
 
 		return Labyrinth { tiles, minotaurCoordinates: minotaurLocation, heroCoordinates: heroLocation, commonKnowledge: Vec::new() };
