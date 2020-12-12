@@ -9,13 +9,12 @@ const PORT: i32 = 6669;
 
 /**
  * Blocks and gets input from stdin
- * TODO: interpret and make this return an Action
  */
-fn getUserInput() -> String {
+fn getUserInput() -> Action::Action {
 	let mut buffer = String::new();
 	let stdin = std::io::stdin();
 	stdin.read_line(&mut buffer).unwrap();
-	return buffer;
+	return Action::Action::from(buffer.as_bytes()[0]);
 }
 
 /**
