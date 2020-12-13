@@ -6,8 +6,8 @@ use rand::{Rng, thread_rng};
 use rand::seq::SliceRandom;
 use std::cmp::min;
 
-const WIDTH: usize = 30;
-const HEIGHT: usize = 15;
+pub const WIDTH: usize = 30;
+pub const HEIGHT: usize = 15;
 const MINIMUM_DISTANCE_BETWEEN_STARTING_POSITIONS: i32 = 10;
 const MAX_GENERATION_ATTEMPTS_BEFORE_RETRY: i32 = 1024;
 const VIEW_DISTANCE: i32 = 5;

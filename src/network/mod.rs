@@ -4,6 +4,7 @@ use std::io::Read;
 pub mod HeroManager;
 pub mod MinotaurManager;
 pub mod Action;
+pub mod MinotaurMessage;
 
 const PORT: i32 = 6669;
 
