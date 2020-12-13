@@ -2,7 +2,6 @@ use std::net::{TcpListener, TcpStream};
 use crate::network::{PORT, NetworkManager, getNetworkResponse, getUserInput};
 use crate::labyrinth::Labyrinth;
 use crate::network::Action::Action;
-use std::io::Write;
 
 pub struct MinotaurManager {
 	tcpListener: TcpListener,
@@ -34,7 +33,8 @@ impl NetworkManager for MinotaurManager {
 			if isGameFinished {
 				break;
 			}
-			isGameFinished = self.handleResponse(getNetworkResponse(&mut self.minotaurStream));
+			let networkResponse = getNetworkResponse(&mut self.heroStream);
+			isGameFinished = self.handleResponse(networkResponse);
 		}
 	}
 

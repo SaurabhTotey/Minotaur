@@ -28,11 +28,12 @@ impl NetworkManager for HeroManager {
 	fn run(&mut self) {
 		let mut isGameFinished = false;
 		while !isGameFinished {
-			isGameFinished = self.handleResponse(getNetworkResponse(&mut self.minotaurStream));
+			let networkResponse = getNetworkResponse(&mut self.minotaurStream);
+			isGameFinished = self.handleResponse(networkResponse);
 			if isGameFinished {
 				break;
 			}
-			isGameFinished = self.handleInput(getUserInput()).unwrap();
+			isGameFinished = self.handleInput(getUserInput());
 		}
 	}
 
