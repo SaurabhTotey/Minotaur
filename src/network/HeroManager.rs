@@ -1,4 +1,4 @@
-use crate::network::{NetworkManager, PORT, getNetworkResponse};
+use crate::network::{NetworkManager, PORT, getNetworkResponse, getUserInput};
 use std::net::TcpStream;
 use crate::network::Action::Action;
 use std::io::Write;
@@ -15,7 +15,10 @@ impl NetworkManager for HeroManager {
 	}
 
 	fn handleInput(&mut self, input: Action) -> bool {
-		unimplemented!()
+		let mut buffer = [input.into(); 2];
+		buffer[1] = '\n' as u8;
+		self.minotaurStream.write(&buffer);
+		return false;
 	}
 
 	fn handleResponse(&mut self, response: String) -> bool {
@@ -25,10 +28,11 @@ impl NetworkManager for HeroManager {
 	fn run(&mut self) {
 		let mut isGameFinished = false;
 		while !isGameFinished {
-			//TODO: delete below
-			println!("{}", getNetworkResponse(&mut self.minotaurStream));
-			self.minotaurStream.write(b"Hello, from the hero!\n").unwrap();
-			isGameFinished = true;
+			isGameFinished = self.handleResponse(getNetworkResponse(&mut self.minotaurStream));
+			if isGameFinished {
+				break;
+			}
+			isGameFinished = self.handleInput(getUserInput()).unwrap();
 		}
 	}
 

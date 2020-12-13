@@ -1,5 +1,5 @@
 use std::net::{TcpListener, TcpStream};
-use crate::network::{PORT, NetworkManager, getNetworkResponse};
+use crate::network::{PORT, NetworkManager, getNetworkResponse, getUserInput};
 use crate::labyrinth::Labyrinth;
 use crate::network::Action::Action;
 use std::io::Write;
@@ -30,10 +30,11 @@ impl NetworkManager for MinotaurManager {
 	fn run(&mut self) {
 		let mut isGameFinished = false;
 		while !isGameFinished {
-			//TODO: delete below
-			self.heroStream.write(b"Hello, from the minotaur!\n").unwrap();
-			println!("{}", getNetworkResponse(&mut self.heroStream));
-			isGameFinished = true;
+			isGameFinished = self.handleInput(getUserInput());
+			if isGameFinished {
+				break;
+			}
+			isGameFinished = self.handleResponse(getNetworkResponse(&mut self.minotaurStream));
 		}
 	}
 
