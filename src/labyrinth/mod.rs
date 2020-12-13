@@ -10,6 +10,7 @@ const WIDTH: usize = 30;
 const HEIGHT: usize = 15;
 const MINIMUM_DISTANCE_BETWEEN_STARTING_POSITIONS: i32 = 10;
 const MAX_GENERATION_ATTEMPTS_BEFORE_RETRY: i32 = 1024;
+const VIEW_DISTANCE: i32 = 5;
 
 pub struct Labyrinth {
 	tiles: [[Tile; WIDTH]; HEIGHT], // all the tiles in the labyrinth
@@ -164,7 +165,22 @@ impl Labyrinth {
 		return minDistances[location1.0][location1.1];
 	}
 
-	//TODO: make methods to make a displayable labyrinth for the player and the minotaur
+	/**
+	 * Returns a string of what this Labyrinth looks like from an observer at the given coordinates
+	 * TODO: this is untested so far
+	 */
+	pub fn viewFrom(self, location: (usize, usize)) -> String {
+		return (0 .. HEIGHT).into_iter().map(|r|
+			(0 .. WIDTH).map(|c| {
+				let currentPosition = (r, c);
+				if Labyrinth::distanceBetweeen(self.tiles, location, currentPosition) < VIEW_DISTANCE || self.commonKnowledge.contains(&currentPosition) {
+					self.tiles[currentPosition.0][currentPosition.1].representation()
+				} else {
+					Tile::UNKNOWN.representation()
+				}
+			}).collect::<Vec<char>>().into_iter().collect()
+		).collect::<Vec<String>>().join("\n")
+	}
 
 }
 impl Debug for Labyrinth {
