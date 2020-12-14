@@ -167,13 +167,14 @@ impl Labyrinth {
 
 	/**
 	 * Returns a string of what this Labyrinth looks like from an observer at the given coordinates
+	 * Assumes that location is in a walkable tile
 	 * TODO: this is untested so far
 	 */
 	pub fn viewFrom(self, location: (usize, usize)) -> String {
 		return (0 .. HEIGHT).into_iter().map(|r|
 			(0 .. WIDTH).map(|c| {
 				let currentPosition = (r, c);
-				if Labyrinth::distanceBetweeen(self.tiles, location, currentPosition) < VIEW_DISTANCE || self.commonKnowledge.contains(&currentPosition) {
+				if self.tiles[r][c] != Tile::WALL && Labyrinth::distanceBetweeen(self.tiles, location, currentPosition) < VIEW_DISTANCE || self.commonKnowledge.contains(&currentPosition) {
 					self.tiles[currentPosition.0][currentPosition.1].representation()
 				} else {
 					Tile::UNKNOWN.representation()
