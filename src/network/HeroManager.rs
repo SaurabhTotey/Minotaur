@@ -15,8 +15,7 @@ impl NetworkManager for HeroManager {
 	}
 
 	fn handleInput(&mut self, input: Action) -> bool {
-		let mut buffer = [input.into(); 2];
-		buffer[1] = '\n' as u8;
+		let mut buffer = input.into();
 		self.minotaurStream.write(&buffer);
 		return false;
 	}

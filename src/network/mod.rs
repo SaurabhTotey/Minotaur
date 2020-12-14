@@ -1,5 +1,6 @@
 use std::net::TcpStream;
 use std::io::Read;
+use std::mem::size_of;
 
 pub mod HeroManager;
 pub mod MinotaurManager;
@@ -15,20 +16,17 @@ fn getUserInput() -> Action::Action {
 	let mut buffer = String::new();
 	let stdin = std::io::stdin();
 	stdin.read_line(&mut buffer).unwrap();
-	return Action::Action::from(buffer.as_bytes()[0]);
+	return Action::Action::from([buffer.as_bytes()[0]; 1]);
 }
 
 /**
  * Blocks and gets a response from the given TcpStream
+ * TODO: look into why below definition doesn't compile
  */
-fn getNetworkResponse(stream: &mut TcpStream) -> String {
-	let mut message = String::new();
-	while message.chars().last().unwrap_or(' ') != '\n' {
-		let mut buffer: [u8; 1] = [0];
-		stream.read(&mut buffer).unwrap();
-		message.push(buffer[0] as char)
-	}
-	return message;
+fn getNetworkResponse<T: Sized>(stream: &mut TcpStream) -> T where T: Sized + From<[u8; size_of::<T>()]> {
+	let mut buffer = [0u8; size_of::<T>()];
+	stream.read_exact(&mut buffer);
+	return buffer.into();
 }
 
 pub trait NetworkManager {
