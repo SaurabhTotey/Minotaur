@@ -1,6 +1,5 @@
 use std::net::TcpStream;
 use std::io::Read;
-use std::mem::size_of;
 
 pub mod HeroManager;
 pub mod MinotaurManager;
@@ -21,10 +20,9 @@ fn getUserInput() -> Action::Action {
 
 /**
  * Blocks and gets a response from the given TcpStream
- * TODO: look into why below definition doesn't compile
  */
-fn getNetworkResponse<T: Sized>(stream: &mut TcpStream) -> T where T: Sized + From<[u8; size_of::<T>()]> {
-	let mut buffer = [0u8; size_of::<T>()];
+fn getNetworkResponse<T: From<[u8; N]>, const N: usize>(stream: &mut TcpStream) -> T {
+	let mut buffer = [0u8; N];
 	stream.read_exact(&mut buffer);
 	return buffer.into();
 }
@@ -38,15 +36,17 @@ pub trait NetworkManager {
 
 	/**
 	 * Should handle an input from the user
+	 * Doesn't need to handle actually taking the input, just responding to it
 	 * Should return whether the program is done
 	 */
 	fn handleInput(&mut self, input: Action::Action) -> bool;
 
 	/**
 	 * Should handle a response from the other player over the network
+	 * Network manager should take in the network response itself in this method
 	 * Should return whether the program is done
 	 */
-	fn handleResponse(&mut self, response: String) -> bool;
+	fn handleResponse(&mut self) -> bool;
 
 	/**
 	 * Should actually run the game to completion

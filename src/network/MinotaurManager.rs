@@ -22,8 +22,9 @@ impl NetworkManager for MinotaurManager {
 		unimplemented!()
 	}
 
-	fn handleResponse(&mut self, response: String) -> bool {
-		unimplemented!()
+	fn handleResponse(&mut self) -> bool {
+		let networkResponse = getNetworkResponse::<Action, 1>(&mut self.heroStream);
+		return false;
 	}
 
 	fn run(&mut self) {
@@ -33,8 +34,7 @@ impl NetworkManager for MinotaurManager {
 			if isGameFinished {
 				break;
 			}
-			let networkResponse = getNetworkResponse(&mut self.heroStream);
-			isGameFinished = self.handleResponse(networkResponse);
+			isGameFinished = self.handleResponse();
 		}
 	}
 

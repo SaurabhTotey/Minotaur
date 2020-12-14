@@ -1,11 +1,13 @@
 use crate::labyrinth::{WIDTH, HEIGHT};
 
+pub const MINOTAUR_MESSAGE_SIZE: usize = 2 + WIDTH * HEIGHT;
+
 pub struct MinotaurMessage {
 	isGameFinished: bool,
 	isWinnerMinotaur: bool, // doesn't matter unless isGameFinished
 	map: [[char; WIDTH]; HEIGHT]
 }
-impl Into<[u8; 2 + WIDTH * HEIGHT]> for MinotaurMessage {
+impl Into<[u8; MINOTAUR_MESSAGE_SIZE]> for MinotaurMessage {
 	fn into(self) -> [u8; 2 + WIDTH * HEIGHT] {
 		let mut buffer = [0u8; 2 + WIDTH * HEIGHT];
 		buffer[0] = self.isGameFinished.into();
@@ -18,8 +20,8 @@ impl Into<[u8; 2 + WIDTH * HEIGHT]> for MinotaurMessage {
 		return buffer;
 	}
 }
-impl From<[u8; 2 + WIDTH * HEIGHT]> for MinotaurMessage {
-	fn from(buffer: [u8; 2 + WIDTH * HEIGHT]) -> Self {
+impl From<[u8; MINOTAUR_MESSAGE_SIZE]> for MinotaurMessage {
+	fn from(buffer: [u8; MINOTAUR_MESSAGE_SIZE]) -> Self {
 		let mut map = [[' '; WIDTH]; HEIGHT];
 		for r in 0 .. HEIGHT {
 			for c in 0 .. WIDTH {

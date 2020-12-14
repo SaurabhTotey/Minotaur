@@ -1,4 +1,5 @@
 #![allow(nonstandard_style)]
+#![feature(const_generics)]
 
 mod network;
 mod labyrinth;
