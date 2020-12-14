@@ -16,24 +16,29 @@ impl NetworkManager for HeroManager {
 	}
 
 	fn handleInput(&mut self, input: Action) -> bool {
-		let mut buffer: [u8; 1] = input.into();
+		let buffer: [u8; 1] = input.into();
 		self.minotaurStream.write(&buffer);
 		return false;
 	}
 
 	fn handleResponse(&mut self) -> bool {
 		let networkResponse = getNetworkResponse::<MinotaurMessage, {MINOTAUR_MESSAGE_SIZE}>(&mut self.minotaurStream);
-		return false;
+		println!("{}", networkResponse.toPrintableString());
+		return networkResponse.isGameFinished;
 	}
 
 	fn run(&mut self) {
 		let mut isGameFinished = false;
 		while !isGameFinished {
-			isGameFinished = self.handleResponse();
+			isGameFinished = self.handleResponse(); // minotaur's action
 			if isGameFinished {
 				break;
 			}
-			isGameFinished = self.handleInput(getUserInput());
+			isGameFinished = self.handleInput(getUserInput()); // hero's action
+			if isGameFinished {
+				break;
+			}
+			isGameFinished = self.handleResponse(); // server/minotaur's response to hero's action
 		}
 	}
 

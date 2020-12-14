@@ -19,11 +19,15 @@ impl NetworkManager for MinotaurManager {
 	}
 
 	fn handleInput(&mut self, input: Action) -> bool {
+		//TODO: change game state based on minotaur's input
+		//TODO: send MinotaurMessage to hero
 		unimplemented!()
 	}
 
 	fn handleResponse(&mut self) -> bool {
 		let networkResponse = getNetworkResponse::<Action, 1>(&mut self.heroStream);
+		//TODO: change game state based on hero's input
+		//TODO: send MinotaurMessage to hero
 		return false;
 	}
 
