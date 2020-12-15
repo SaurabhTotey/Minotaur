@@ -14,8 +14,8 @@ const VIEW_DISTANCE: i32 = 5;
 
 pub struct Labyrinth {
 	tiles: [[Tile; WIDTH]; HEIGHT], // all the tiles in the labyrinth
-	minotaurCoordinates: (usize, usize),
-	heroCoordinates: (usize, usize),
+	minotaurCoordinates: ((usize, usize), Tile), // coordinates and what tile they are on top of
+	heroCoordinates: ((usize, usize), Tile), // coordinates and what tile they are on top of
 	commonKnowledge: Vec<(usize, usize)> // what tiles are visible to both players
 }
 impl Labyrinth {
@@ -95,7 +95,12 @@ impl Labyrinth {
 			break;
 		}
 
-		return Labyrinth { tiles, minotaurCoordinates: minotaurLocation, heroCoordinates: heroLocation, commonKnowledge: Vec::new() };
+		return Labyrinth {
+			tiles,
+			minotaurCoordinates: (minotaurLocation, Tile::WALKABLE),
+			heroCoordinates: (heroLocation, Tile::WALKABLE),
+			commonKnowledge: Vec::new()
+		};
 	}
 
 	/**
