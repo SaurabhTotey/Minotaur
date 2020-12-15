@@ -8,8 +8,6 @@ pub struct MinotaurManager {
 	heroStream: TcpStream,
 	labyrinth: Labyrinth
 }
-impl MinotaurManager {
-}
 impl NetworkManager for MinotaurManager {
 
 	fn new() -> MinotaurManager {

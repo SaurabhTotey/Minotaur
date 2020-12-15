@@ -7,8 +7,6 @@ use crate::network::MinotaurMessage::{MinotaurMessage, MINOTAUR_MESSAGE_SIZE};
 pub struct HeroManager {
 	minotaurStream: TcpStream
 }
-impl HeroManager {
-}
 impl NetworkManager for HeroManager {
 
 	fn new() -> HeroManager {
