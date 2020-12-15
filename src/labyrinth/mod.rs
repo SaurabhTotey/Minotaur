@@ -188,6 +188,19 @@ impl Labyrinth {
 		).collect::<Vec<String>>().join("\n")
 	}
 
+	/**
+	 * Gets the winner of this game (Tile::HERO or Tile::MINOTAUR) if any
+	 * Returns none if no winnner
+	 */
+	pub fn getWinner(self) -> Option<Tile> {
+		if self.heroCoordinates.1 == Tile::VISIBLE_EXIT || self.heroCoordinates.1 == Tile::INVISIBLE_EXIT {
+			return Some(Tile::HERO);
+		} else if self.minotaurCoordinates.1 == Tile::HERO {
+			return Some(Tile::MINOTAUR);
+		}
+		return None;
+	}
+
 }
 impl Debug for Labyrinth {
 	fn fmt(&self, f: &mut Formatter<'_>) -> Result {
