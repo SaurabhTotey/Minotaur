@@ -32,8 +32,9 @@ impl MinotaurManager {
 
 	/**
 	 * Sends the game state as a MinotaurMessage to the hero
+	 * Returns the sent message
 	 */
-	fn sendState(&mut self) {
+	fn sendState(&mut self) -> MinotaurMessage {
 		let winner = self.labyrinth.getWinner();
 		let message = MinotaurMessage {
 			isGameFinished: winner.is_some(),
@@ -42,6 +43,7 @@ impl MinotaurManager {
 		};
 		let sendableMessage: [u8; MINOTAUR_MESSAGE_SIZE] = message.into();
 		self.heroStream.write(&sendableMessage);
+		return message;
 	}
 
 }
@@ -55,8 +57,10 @@ impl NetworkManager for MinotaurManager {
 
 	fn handleInput(&mut self, input: Action) -> bool {
 		//TODO: change game state based on minotaur's input
-		self.sendState();
-		if self.labyrinth.getWinner().is_some() {
+		let state = self.sendState();
+		println!("{}", state.toPrintableString());
+		// only the first check should be necessary; only the minotaur can win on minotaur's input
+		if state.isGameFinished && state.isWinnerMinotaur {
 			println!("{}", "You have caught the hero!");
 			return true;
 		}
@@ -66,8 +70,10 @@ impl NetworkManager for MinotaurManager {
 	fn handleResponse(&mut self) -> bool {
 		let networkResponse = getNetworkResponse::<Action, 1>(&mut self.heroStream);
 		//TODO: change game state based on hero's input
-		self.sendState();
-		if self.labyrinth.getWinner().is_some() {
+		let state = self.sendState();
+		println!("{}", state.toPrintableString());
+		// only the first check should be necessary; only the hero can win on the hero's turn
+		if state.isGameFinished && !state.isWinnerMinotaur {
 			println!("{}", "The hero has escaped the labyrinth!");
 			return true;
 		}

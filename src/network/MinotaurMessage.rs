@@ -2,6 +2,7 @@ use crate::labyrinth::{WIDTH, HEIGHT};
 
 pub const MINOTAUR_MESSAGE_SIZE: usize = 2 + WIDTH * HEIGHT;
 
+#[derive(Copy, Clone)]
 pub struct MinotaurMessage {
 	pub isGameFinished: bool,
 	pub isWinnerMinotaur: bool, // doesn't matter unless isGameFinished
