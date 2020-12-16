@@ -10,7 +10,7 @@ pub const WIDTH: usize = 30;
 pub const HEIGHT: usize = 15;
 const MINIMUM_DISTANCE_BETWEEN_STARTING_POSITIONS: i32 = 10;
 const MAX_GENERATION_ATTEMPTS_BEFORE_RETRY: i32 = 1024;
-const VIEW_DISTANCE: i32 = 5;
+const VIEW_DISTANCE: i32 = 10;
 
 pub struct Labyrinth {
 	tiles: [[Tile; WIDTH]; HEIGHT], // all the tiles in the labyrinth
