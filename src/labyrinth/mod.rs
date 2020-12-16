@@ -1,4 +1,4 @@
-mod tile;
+pub mod tile;
 use tile::Tile;
 use std::fmt::{Debug, Formatter, Result};
 extern crate rand;
@@ -14,8 +14,8 @@ const VIEW_DISTANCE: i32 = 5;
 
 pub struct Labyrinth {
 	tiles: [[Tile; WIDTH]; HEIGHT], // all the tiles in the labyrinth
-	minotaurCoordinates: ((usize, usize), Tile), // coordinates and what tile they are on top of
-	heroCoordinates: ((usize, usize), Tile), // coordinates and what tile they are on top of
+	pub minotaurCoordinates: ((usize, usize), Tile), // coordinates and what tile they are on top of
+	pub heroCoordinates: ((usize, usize), Tile), // coordinates and what tile they are on top of
 	commonKnowledge: Vec<(usize, usize)> // what tiles are visible to both players
 }
 impl Labyrinth {
@@ -171,34 +171,44 @@ impl Labyrinth {
 	}
 
 	/**
-	 * Returns a string of what this Labyrinth looks like from an observer at the given coordinates
+	 * Returns a 2d character array of what this Labyrinth looks like from an observer at the given coordinates
 	 * Assumes that location is in a walkable tile
-	 * TODO: this is untested so far
 	 */
-	pub fn viewFrom(self, location: (usize, usize)) -> String {
-		return (0 .. HEIGHT).into_iter().map(|r|
-			(0 .. WIDTH).map(|c| {
+	pub fn viewFrom(&self, location: (usize, usize)) -> [[char; WIDTH]; HEIGHT] {
+		let mut view = [[' '; WIDTH]; HEIGHT];
+		(0 .. HEIGHT).into_iter().for_each(|r|
+			(0 .. WIDTH).for_each(|c| {
 				let currentPosition = (r, c);
-				if self.tiles[r][c] != Tile::WALL && Labyrinth::distanceBetweeen(self.tiles, location, currentPosition) < VIEW_DISTANCE || self.commonKnowledge.contains(&currentPosition) {
+				let characterToAdd = if self.isWalkable(currentPosition) && Labyrinth::distanceBetweeen(self.tiles, location, currentPosition) < VIEW_DISTANCE || self.commonKnowledge.contains(&currentPosition) {
 					self.tiles[currentPosition.0][currentPosition.1].representation()
 				} else {
 					Tile::UNKNOWN.representation()
-				}
-			}).collect::<Vec<char>>().into_iter().collect()
-		).collect::<Vec<String>>().join("\n")
+				};
+				view[r][c] = characterToAdd;
+			})
+		);
+		return view;
 	}
 
 	/**
 	 * Gets the winner of this game (Tile::HERO or Tile::MINOTAUR) if any
 	 * Returns none if no winnner
 	 */
-	pub fn getWinner(self) -> Option<Tile> {
+	pub fn getWinner(&self) -> Option<Tile> {
 		if self.heroCoordinates.1 == Tile::VISIBLE_EXIT || self.heroCoordinates.1 == Tile::INVISIBLE_EXIT {
 			return Some(Tile::HERO);
 		} else if self.minotaurCoordinates.1 == Tile::HERO {
 			return Some(Tile::MINOTAUR);
 		}
 		return None;
+	}
+
+	/**
+	 * Returns whether the given location is walkable or not
+	 * Not walkable implies that the tile is a wall
+	 */
+	pub fn isWalkable(&self, location: (usize, usize)) -> bool {
+		return self.tiles[location.0][location.1] != Tile::WALL;
 	}
 
 }

@@ -2,11 +2,50 @@ use std::net::{TcpListener, TcpStream};
 use crate::network::{PORT, NetworkManager, getNetworkResponse, getUserInput};
 use crate::labyrinth::Labyrinth;
 use crate::network::Action::Action;
+use crate::network::MinotaurMessage::{MinotaurMessage, MINOTAUR_MESSAGE_SIZE};
+use crate::labyrinth::tile::Tile;
+use std::io::Write;
 
 pub struct MinotaurManager {
 	tcpListener: TcpListener,
 	heroStream: TcpStream,
 	labyrinth: Labyrinth
+}
+impl MinotaurManager {
+
+	/**
+	 * Gets a new location after applying the given action to the given initial location
+	 */
+	fn locationAfterActionOn(self, initialLocation: (usize, usize), action: Action) -> (usize, usize) {
+		let newLocation = match action {
+			Action::PERFORM_ACTION => initialLocation,
+			Action::MOVE_UP => (initialLocation.0 - 1, initialLocation.1),
+			Action::MOVE_DOWN => (initialLocation.0 + 1, initialLocation.1),
+			Action::MOVE_LEFT => (initialLocation.0, initialLocation.1 - 1),
+			Action::MOVE_RIGHT => (initialLocation.0, initialLocation.1 + 1)
+		};
+		if !self.labyrinth.isWalkable(newLocation) {
+			return initialLocation;
+		}
+		return newLocation;
+	}
+
+	/**
+	 * Sends the game state as a MinotaurMessage to the hero
+	 * Returns whether the game has yet been won
+	 */
+	fn sendState(&mut self) -> bool {
+		let winner = self.labyrinth.getWinner();
+		let message = MinotaurMessage {
+			isGameFinished: winner.is_some(),
+			isWinnerMinotaur: winner.contains(&Tile::MINOTAUR),
+			map: self.labyrinth.viewFrom(self.labyrinth.heroCoordinates.0)
+		};
+		let sendableMessage: [u8; MINOTAUR_MESSAGE_SIZE] = message.into();
+		self.heroStream.write(&sendableMessage);
+		return winner.is_some();
+	}
+
 }
 impl NetworkManager for MinotaurManager {
 
@@ -18,15 +57,13 @@ impl NetworkManager for MinotaurManager {
 
 	fn handleInput(&mut self, input: Action) -> bool {
 		//TODO: change game state based on minotaur's input
-		//TODO: send MinotaurMessage to hero
-		unimplemented!()
+		return self.sendState();
 	}
 
 	fn handleResponse(&mut self) -> bool {
 		let networkResponse = getNetworkResponse::<Action, 1>(&mut self.heroStream);
 		//TODO: change game state based on hero's input
-		//TODO: send MinotaurMessage to hero
-		return false;
+		return self.sendState();
 	}
 
 	fn run(&mut self) {

@@ -1,5 +1,6 @@
 #![allow(nonstandard_style)]
 #![feature(const_generics)]
+#![feature(option_result_contains)]
 
 mod network;
 mod labyrinth;
