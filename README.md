@@ -13,5 +13,6 @@ The hero can place torches that reveal the surrounding area to both players, and
 Some possible improvements for later:
 - [ ] messages for whose turn it is
 - [ ] graceful disconnect handling
-- [ ] actually fun gameplay and better balancing
+- [ ] actually fun gameplay and better balancing (maybe add a turn limit (like the labyrinth collapses after 100 turns or something) to encourage movement)
 - [ ] graceful handling of receiving garbage data over network
+- [ ] better command line arguments (i.e. allow ports and IPs to be provided)
