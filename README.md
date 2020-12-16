@@ -9,3 +9,9 @@ The game ends when the Minotaur touches the hero or the hero touches the exit.
 The labyrinth is invisible to both players, who can both only see tiles that are within 10 moves from their current location.
 
 The hero can place torches that reveal the surrounding area to both players, and the Minotaur can reveal whether any nearby tiles are exits. If the minotaur uncovers an exit, it is revealed to both players. 
+
+Some possible improvements for later:
+- [ ] messages for whose turn it is
+- [ ] graceful disconnect handling
+- [ ] actually fun gameplay and better balancing
+- [ ] graceful handling of receiving garbage data over network

@@ -78,7 +78,7 @@ impl NetworkManager for MinotaurManager {
 		// hero can win or lose on their turn (they can run into exit and win, or into minotaur and lose)
 		if state.isGameFinished {
 			if state.isWinnerMinotaur {
-				println!("{}", "The hero has turned themselves over to you!");
+				println!("{}", "The hero has turned themselves over to you! And you thought Theseus was pathetic.");
 			} else {
 				println!("{}", "The hero has escaped the labyrinth!");
 			}
