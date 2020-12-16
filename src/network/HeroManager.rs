@@ -21,7 +21,7 @@ impl NetworkManager for HeroManager {
 
 	fn handleResponse(&mut self) -> bool {
 		let networkResponse = getNetworkResponse::<MinotaurMessage, {MINOTAUR_MESSAGE_SIZE}>(&mut self.minotaurStream);
-		println!("{}", networkResponse.toPrintableString());
+		println!("{}", MinotaurMessage::toPrintableString(networkResponse.map));
 		if networkResponse.isGameFinished {
 			if networkResponse.isWinnerMinotaur {
 				println!("{}", "Oh no, the minotaur caught you!");

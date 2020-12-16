@@ -9,9 +9,15 @@ pub struct MinotaurMessage {
 	pub map: [[char; WIDTH]; HEIGHT]
 }
 impl MinotaurMessage {
-	pub fn toPrintableString(&self) -> String {
-		return self.map.iter().map(|row| row.iter().collect::<String>()).collect::<Vec<_>>().join("\n");
+
+	/**
+	 * Joins the given 2d array of characters into a single string
+	 * Each row gets its own line
+	 */
+	pub fn toPrintableString(map: [[char; WIDTH]; HEIGHT]) -> String {
+		return map.iter().map(|row| row.iter().collect::<String>()).collect::<Vec<_>>().join("\n");
 	}
+
 }
 impl Into<[u8; MINOTAUR_MESSAGE_SIZE]> for MinotaurMessage {
 	fn into(self) -> [u8; 2 + WIDTH * HEIGHT] {
