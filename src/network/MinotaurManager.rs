@@ -75,9 +75,13 @@ impl NetworkManager for MinotaurManager {
 		}
 		let state = self.sendState();
 		println!("{}\n\n\n", MinotaurMessage::toPrintableString(self.labyrinth.viewFrom(self.labyrinth.minotaurCoordinates.0)));
-		// only the first check should be necessary; only the hero can win on the hero's turn
-		if state.isGameFinished && !state.isWinnerMinotaur {
-			println!("{}", "The hero has escaped the labyrinth!");
+		// hero can win or lose on their turn (they can run into exit and win, or into minotaur and lose)
+		if state.isGameFinished {
+			if state.isWinnerMinotaur {
+				println!("{}", "The hero has turned themselves over to you!");
+			} else {
+				println!("{}", "The hero has escaped the labyrinth!");
+			}
 			return true;
 		}
 		return false;
