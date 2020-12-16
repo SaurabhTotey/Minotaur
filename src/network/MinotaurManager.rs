@@ -7,7 +7,6 @@ use crate::labyrinth::tile::Tile;
 use std::io::Write;
 
 pub struct MinotaurManager {
-	tcpListener: TcpListener,
 	heroStream: TcpStream,
 	labyrinth: Labyrinth
 }
@@ -40,7 +39,7 @@ impl MinotaurManager {
 			map: self.labyrinth.viewFrom(self.labyrinth.heroCoordinates.0)
 		};
 		let sendableMessage: [u8; MINOTAUR_MESSAGE_SIZE] = message.into();
-		self.heroStream.write(&sendableMessage);
+		self.heroStream.write(&sendableMessage).unwrap();
 		return message;
 	}
 
@@ -50,7 +49,7 @@ impl NetworkManager for MinotaurManager {
 	fn new() -> MinotaurManager {
 		let listener = TcpListener::bind("0.0.0.0:".to_string() + &*PORT.to_string()).unwrap();
 		let stream = listener.accept().unwrap().0;
-		return MinotaurManager { tcpListener: listener, heroStream: stream, labyrinth: Labyrinth::new() };
+		return MinotaurManager { heroStream: stream, labyrinth: Labyrinth::new() };
 	}
 
 	fn handleInput(&mut self, input: Action) -> bool {
@@ -59,7 +58,7 @@ impl NetworkManager for MinotaurManager {
 			//TODO: minotaur action
 		}
 		let state = self.sendState();
-		println!("{}", MinotaurMessage::toPrintableString(self.labyrinth.viewFrom(self.labyrinth.minotaurCoordinates.0)));
+		println!("{}\n\n\n", MinotaurMessage::toPrintableString(self.labyrinth.viewFrom(self.labyrinth.minotaurCoordinates.0)));
 		// only the first check should be necessary; only the minotaur can win on minotaur's input
 		if state.isGameFinished && state.isWinnerMinotaur {
 			println!("{}", "You have caught the hero!");
@@ -75,7 +74,7 @@ impl NetworkManager for MinotaurManager {
 			//TODO: hero action
 		}
 		let state = self.sendState();
-		println!("{}", MinotaurMessage::toPrintableString(self.labyrinth.viewFrom(self.labyrinth.minotaurCoordinates.0)));
+		println!("{}\n\n\n", MinotaurMessage::toPrintableString(self.labyrinth.viewFrom(self.labyrinth.minotaurCoordinates.0)));
 		// only the first check should be necessary; only the hero can win on the hero's turn
 		if state.isGameFinished && !state.isWinnerMinotaur {
 			println!("{}", "The hero has escaped the labyrinth!");

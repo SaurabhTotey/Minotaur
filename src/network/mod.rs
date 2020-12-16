@@ -23,7 +23,7 @@ fn getUserInput() -> Action::Action {
  */
 fn getNetworkResponse<T: From<[u8; N]>, const N: usize>(stream: &mut TcpStream) -> T {
 	let mut buffer = [0u8; N];
-	stream.read_exact(&mut buffer);
+	stream.read_exact(&mut buffer).unwrap();
 	return buffer.into();
 }
 
