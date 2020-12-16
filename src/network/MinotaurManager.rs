@@ -15,8 +15,9 @@ impl MinotaurManager {
 
 	/**
 	 * Gets a new location after applying the given action to the given initial location
+	 * Doesn't check whether the given location is legal or walkable
 	 */
-	fn locationAfterActionOn(self, initialLocation: (usize, usize), action: Action) -> (usize, usize) {
+	fn locationAfterActionOn(&self, initialLocation: (usize, usize), action: Action) -> (usize, usize) {
 		let newLocation = match action {
 			Action::PERFORM_ACTION => initialLocation,
 			Action::MOVE_UP => (initialLocation.0 - 1, initialLocation.1),
@@ -24,9 +25,6 @@ impl MinotaurManager {
 			Action::MOVE_LEFT => (initialLocation.0, initialLocation.1 - 1),
 			Action::MOVE_RIGHT => (initialLocation.0, initialLocation.1 + 1)
 		};
-		if !self.labyrinth.isWalkable(newLocation) {
-			return initialLocation;
-		}
 		return newLocation;
 	}
 
@@ -56,7 +54,10 @@ impl NetworkManager for MinotaurManager {
 	}
 
 	fn handleInput(&mut self, input: Action) -> bool {
-		//TODO: change game state based on minotaur's input
+		self.labyrinth.moveMinotaur(self.locationAfterActionOn(self.labyrinth.minotaurCoordinates.0, input));
+		if input == Action::PERFORM_ACTION {
+			//TODO: minotaur action
+		}
 		let state = self.sendState();
 		println!("{}", state.toPrintableString());
 		// only the first check should be necessary; only the minotaur can win on minotaur's input
@@ -69,7 +70,10 @@ impl NetworkManager for MinotaurManager {
 
 	fn handleResponse(&mut self) -> bool {
 		let networkResponse = getNetworkResponse::<Action, 1>(&mut self.heroStream);
-		//TODO: change game state based on hero's input
+		self.labyrinth.moveHero(self.locationAfterActionOn(self.labyrinth.heroCoordinates.0, networkResponse));
+		if networkResponse == Action::PERFORM_ACTION {
+			//TODO: hero action
+		}
 		let state = self.sendState();
 		println!("{}", state.toPrintableString());
 		// only the first check should be necessary; only the hero can win on the hero's turn

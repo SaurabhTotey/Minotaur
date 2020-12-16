@@ -211,6 +211,32 @@ impl Labyrinth {
 		return self.tiles[location.0][location.1] != Tile::WALL;
 	}
 
+	/**
+	 * Moves the hero to the given location
+	 * Ensures that the new location is a distance of 1 away and is walkable
+	 */
+	pub fn moveHero(&mut self, newLocation: (usize, usize)) {
+		if !Labyrinth::isLegalCoordinate(newLocation) || Labyrinth::distanceBetweeen(self.tiles, self.heroCoordinates.0, newLocation) > 1 || !self.isWalkable(newLocation) {
+			return;
+		}
+		self.tiles[self.heroCoordinates.0.0][self.heroCoordinates.0.1] = self.heroCoordinates.1;
+		self.heroCoordinates = (newLocation, self.tiles[newLocation.0][newLocation.1]);
+		self.tiles[newLocation.0][newLocation.1] = Tile::HERO;
+	}
+
+	/**
+	 * Moves the minotaur to the given location
+	 * Ensures that the new location is a distance of 1 away and is walkable
+	 */
+	pub fn moveMinotaur(&mut self, newLocation: (usize, usize)) {
+		if !Labyrinth::isLegalCoordinate(newLocation) || Labyrinth::distanceBetweeen(self.tiles, self.minotaurCoordinates.0, newLocation) > 1 || !self.isWalkable(newLocation) {
+			return;
+		}
+		self.tiles[self.minotaurCoordinates.0.0][self.minotaurCoordinates.0.1] = self.minotaurCoordinates.1;
+		self.minotaurCoordinates = (newLocation, self.tiles[newLocation.0][newLocation.1]);
+		self.tiles[newLocation.0][newLocation.1] = Tile::MINOTAUR;
+	}
+
 }
 impl Debug for Labyrinth {
 	fn fmt(&self, f: &mut Formatter<'_>) -> Result {

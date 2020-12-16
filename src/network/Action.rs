@@ -1,3 +1,4 @@
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub enum Action {
 	MOVE_LEFT,
 	MOVE_RIGHT,
