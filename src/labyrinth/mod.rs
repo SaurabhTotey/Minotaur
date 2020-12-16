@@ -225,6 +225,21 @@ impl Labyrinth {
 	}
 
 	/**
+	 * Performs the hero's action and places a torch
+	 * Placing a torch reveals all tiles within 5 spaces
+	 */
+	pub fn performHeroAction(&mut self) {
+		self.heroCoordinates = (self.heroCoordinates.0, Tile::TORCH);
+		self.commonKnowledge.append(
+			&mut (0..HEIGHT).flat_map(|r|
+				(0..WIDTH).map(move |c| (r, c))
+			).filter(|location|
+				self.isWalkable(*location) && Labyrinth::distanceBetweeen(self.tiles, self.heroCoordinates.0, *location) <= 5
+			).collect::<Vec<_>>()
+		)
+	}
+
+	/**
 	 * Moves the minotaur to the given location
 	 * Ensures that the new location is a distance of 1 away and is walkable
 	 */
@@ -235,6 +250,31 @@ impl Labyrinth {
 		self.tiles[self.minotaurCoordinates.0.0][self.minotaurCoordinates.0.1] = self.minotaurCoordinates.1;
 		self.minotaurCoordinates = (newLocation, self.tiles[newLocation.0][newLocation.1]);
 		self.tiles[newLocation.0][newLocation.1] = Tile::MINOTAUR;
+	}
+
+	/**
+	 * Performs the minotaur's action and reveals nearby walkable tiles as either visible non-exits or visible exits
+	 */
+	pub fn performMinotaurAction(&mut self) {
+		let affectedLocations = (0..HEIGHT).flat_map(|r|
+			(0..WIDTH).map(move |c| (r, c))
+		).filter(|location|
+			self.isWalkable(*location) && Labyrinth::distanceBetweeen(self.tiles, self.minotaurCoordinates.0, *location) <= 5
+		).collect::<Vec<_>>();
+		affectedLocations.into_iter().for_each(|location| {
+			if self.tiles[location.0][location.1] == Tile::INVISIBLE_EXIT {
+				self.tiles[location.0][location.1] = Tile::VISIBLE_EXIT;
+				self.commonKnowledge.push(location);
+			} else if self.tiles[location.0][location.1] == Tile::WALKABLE {
+				self.tiles[location.0][location.1] = Tile::VISIBLE_NON_EXIT;
+			}
+		});
+		if self.minotaurCoordinates.1 == Tile::INVISIBLE_EXIT {
+			self.minotaurCoordinates = (self.minotaurCoordinates.0, Tile::VISIBLE_EXIT);
+			self.commonKnowledge.push(self.minotaurCoordinates.0);
+		} else if self.minotaurCoordinates.1 == Tile::WALKABLE {
+			self.minotaurCoordinates = (self.minotaurCoordinates.0, Tile::VISIBLE_NON_EXIT);
+		}
 	}
 
 }

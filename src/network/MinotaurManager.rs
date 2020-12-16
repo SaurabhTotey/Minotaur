@@ -55,7 +55,7 @@ impl NetworkManager for MinotaurManager {
 	fn handleInput(&mut self, input: Action) -> bool {
 		self.labyrinth.moveMinotaur(self.locationAfterActionOn(self.labyrinth.minotaurCoordinates.0, input));
 		if input == Action::PERFORM_ACTION {
-			//TODO: minotaur action
+			self.labyrinth.performMinotaurAction();
 		}
 		let state = self.sendState();
 		println!("{}\n\n\n", MinotaurMessage::toPrintableString(self.labyrinth.viewFrom(self.labyrinth.minotaurCoordinates.0)));
@@ -71,7 +71,7 @@ impl NetworkManager for MinotaurManager {
 		let networkResponse = getNetworkResponse::<Action, 1>(&mut self.heroStream);
 		self.labyrinth.moveHero(self.locationAfterActionOn(self.labyrinth.heroCoordinates.0, networkResponse));
 		if networkResponse == Action::PERFORM_ACTION {
-			//TODO: hero action
+			self.labyrinth.performHeroAction();
 		}
 		let state = self.sendState();
 		println!("{}\n\n\n", MinotaurMessage::toPrintableString(self.labyrinth.viewFrom(self.labyrinth.minotaurCoordinates.0)));
